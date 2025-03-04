@@ -1,0 +1,62 @@
+@extends('admin.layout')
+
+@section('content')
+<h1>Auftragsübersicht</h1>
+
+<a href="{{ route('admin.auftraege.create') }}" class="btn btn-primary mb-3">Neuen Auftrag anlegen</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Auftragsnummer</th>
+            <th>Kunde</th>
+            <th>Zugewiesener Benutzer</th>
+            <th>Status</th>
+            <th>Erstellt am</th>
+            <th>Aktionen</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($auftraege as $auftrag)
+        <tr>
+            <td>{{ $auftrag->id }}</td>
+            <td>{{ $auftrag->auftragsnummer }}</td>
+            <td>
+                @if($auftrag->kunde)
+                    {{ $auftrag->kunde->firmenname }}
+                @else
+                    <em>- kein Kunde -</em>
+                @endif
+            </td>
+            <td>
+                @if($auftrag->benutzer)
+                    {{ $auftrag->benutzer->name }}
+                @else
+                    <em>- keiner zugewiesen -</em>
+                @endif
+            </td>
+            <td>{{ $auftrag->status }}</td>
+            <td>{{ $auftrag->created_at }}</td>
+            <td>
+                <a href="{{ route('admin.auftraege.show', $auftrag->id) }}" class="btn btn-info btn-sm">Anzeigen</a>
+                <a href="{{ route('admin.auftraege.edit', $auftrag->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
+                <form action="{{ route('admin.auftraege.destroy', $auftrag->id) }}" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-danger btn-sm" onclick="return confirm('Diesen Auftrag wirklich löschen?')">
+                        Löschen
+                    </button>
+                </form>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+
+
+    <h1>Auftragsübersicht</h1>
+
+    @livewire('auftraege-table')
+
+@endsection

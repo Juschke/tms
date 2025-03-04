@@ -1,0 +1,142 @@
+<div>
+    <!-- Suchfeld, Per-Page-Select und Checkbox für "keine abgeschlossenen Aufträge" -->
+    <div class="row mb-3">
+        <div class="col-sm-4">
+            <input 
+                type="text" 
+                wire:model="search" 
+                class="form-control" 
+                placeholder="Suche in Aufträgen..." 
+            />
+        </div>
+
+        <div class="col-sm-2">
+            <select 
+                wire:model="perPage" 
+                class="form-control"
+            >
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+
+        <div class="col-sm-3 d-flex align-items-center">
+            <label for="hideCompleted" class="form-check-label">
+                <input 
+                    type="checkbox" 
+                    id="hideCompleted" 
+                    wire:model="hideCompleted" 
+                />
+                Keine abgeschlossenen Aufträge
+            </label>
+        </div>
+    </div>
+
+    <!-- Tabelle -->
+    <table id="auftraege-table" class="table table-bordered table-hover" style="table-layout: fixed;">
+        <thead>
+            <tr>
+                <!-- "Select All" Checkbox -->
+                <th>
+                    <input 
+                        type="checkbox" 
+                        wire:click="selectAll"
+                        {{-- Prüfen, ob alle auf der aktuellen Seite bereits ausgewählt sind --}}
+                        @if(count(array_intersect($auftraege->pluck('id')->toArray(), $selected)) 
+                            === $auftraege->count() && $auftraege->count() > 0) 
+                            checked 
+                        @endif
+                    />
+                </th>
+                <th style="cursor: pointer;" wire:click="sortBy('id')">
+                    ID
+                    @if($sortField === 'id')
+                        @if($sortDirection === 'asc')
+                            &uarr;
+                        @else
+                            &darr;
+                        @endif
+                    @endif
+                </th>
+                <th style="cursor: pointer;" wire:click="sortBy('auftragsnummer')">
+                    Auftragsnummer
+                    @if($sortField === 'auftragsnummer')
+                        @if($sortDirection === 'asc')
+                            &uarr;
+                        @else
+                            &darr;
+                        @endif
+                    @endif
+                </th>
+                <th style="cursor: pointer;" wire:click="sortBy('kunde.firmenname')">
+                    Kunde
+                </th>
+                <th style="cursor: pointer;" wire:click="sortBy('benutzer.name')">
+                    Zugewiesener Benutzer
+                </th>
+                <th style="cursor: pointer;" wire:click="sortBy('status')">
+                    Status
+                </th>
+                <th style="cursor: pointer;" wire:click="sortBy('created_at')">
+                    Erstellt am
+                </th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($auftraege as $auftrag)
+                <tr>
+                    <td>
+                        <input 
+                            type="checkbox" 
+                            value="{{ $auftrag->id }}" 
+                            wire:model="selected"
+                        />
+                    </td>
+                    <td>{{ $auftrag->id }}</td>
+                    <td>{{ $auftrag->auftragsnummer }}</td>
+                    <td>
+                        {{ optional($auftrag->kunde)->firmenname ?? '- kein Kunde -' }}
+                    </td>
+                    <td>
+                        {{ optional($auftrag->benutzer)->name ?? '- keiner zugewiesen -' }}
+                    </td>
+                    <td>{{ $auftrag->status }}</td>
+                    <td>{{ $auftrag->created_at }}</td>
+                    <td>
+                        <a href="#" class="btn btn-info btn-sm">Anzeigen</a>
+                        <a href="#" class="btn btn-warning btn-sm">Bearbeiten</a>
+                        <button 
+                            wire:click="deleteAuftrag({{ $auftrag->id }})" 
+                            class="btn btn-danger btn-sm"
+                        >
+                            Löschen
+                        </button>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="8">Keine Aufträge gefunden.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+
+    <!-- Paginierung -->
+    {{ $auftraege->links() }}
+    <!-- Vor dem schließenden </body>-Tag oder in deinem <head> nach Livewire-Scripts: -->
+<script src="https://cdn.jsdelivr.net/npm/table-dragger@1.0.2/dist/table-dragger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/colresizable@1.6.0/colResizable-1.6.min.js"></script>
+
+    <script>
+        document.addEventListener('livewire:load', function () {
+            // Hier table-dragger initialisieren
+            tableDragger(document.getElementById('auftragTabelle'), {
+                mode: 'column',
+                onlyBody: false
+            });
+        });
+    </script>
+</div>

@@ -1,0 +1,841 @@
+:root {
+    --primary-color: #5c6ac4;
+    --primary-hover: #4959bd;
+    --secondary-color: #47c1bf;
+    --text-color: #212b36;
+    --text-light: #637381;
+    --bg-color: #f4f6f8;
+    --sidebar-bg: #ffffff;
+    --card-bg: #ffffff;
+    --border-color: #dfe3e8;
+    --success-color: #50b83c;
+    --warning-color: #ffb84d;
+    --danger-color: #de3618;
+    --shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    overflow-y: auto;
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(-100%); /* unsichtbar nach links verschoben */
+    z-index: 9999; /* damit sie über dem Content liegt */
+    color: #fff; /* Textfarbe */
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--border-color);
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+    overflow-y: auto;
+}
+
+/* 2) Sidebar geöffnet: transform = none (sichtbar) */
+.sidebar.sidebar-open {
+    transform: translateX(0);
+}
+
+/* 3) Der Toggle-Button (Hamburger) fix positionieren */
+.menu-toggle {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    background: transparent;
+    border: none;
+    z-index: 10000; /* über der Sidebar */
+    cursor: pointer;
+}
+
+/* Optional: Hover-Effekt auf dem Toggle */
+.menu-toggle:hover {
+    opacity: 0.8;
+}
+
+/* 4) Sidebar-Inhalte (Beispiel) */
+.sidebar-logo {
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    /* oder margin-top: 1rem; wenn du magst */
+}
+
+.sidebar-menu .menu-item {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    color: #fff;
+    text-decoration: none;
+    /* optionaler Hover-Effekt */
+    transition: background 0.2s;
+}
+
+.sidebar-menu .menu-item:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.sidebar-menu .menu-item.active {
+    background: rgba(255,255,255,0.2);
+}
+
+/* 5) Responsives Verhalten (optional)
+   z.B. ab 768px immer Sidebar sichtbar, kein Toggle nötig
+*/
+@media (min-width: 768px) {
+    .menu-toggle {
+        display: none; /* Verstecke Toggle auf Desktop */
+    }
+    .sidebar {
+        transform: translateX(0) !important; /* Sidebar immer sichtbar */
+        width: 250px;
+    }
+    /* Hauptinhalt, wenn Sidebar offen (z.B. margin-left) */
+    body {
+        margin-left: 250px; /* Platz für Sidebar */
+    }
+}
+
+.sidebar-logo {
+    padding: 20px;
+    display: flex;
+    background-color: rgb(74, 47, 145) !important;
+    align-items: center;
+            }
+
+.logo-img {
+    height: 40px;
+}
+
+.sidebar-menu {
+    padding: 20px 0;
+}
+
+.menu-item {
+padding: 12px 20px;
+display: flex;
+align-items: center;
+color: #fff;
+text-decoration: none;
+transition: var(--transition);
+position: relative; /* Wichtig für die Positionierung der Hover-Box */
+overflow: hidden; /* Verhindert Überlappen der Hover-Box */
+}
+
+.menu-item:hover, .menu-item.active {
+background-color: transparent; /* Hintergrundfarbe des Menüpunkts entfernen */
+color: #fff; /* Textfarbe beibehalten */
+}
+
+.menu-item:hover::before, .menu-item.active::before { /* ::before Pseudo-Element für die Box */
+content: "";
+position: absolute;
+left: 10px; /* Abstand von links */
+top: 50%; /* Zentriert vertikal */
+transform: translateY(-50%); /* Zentriert vertikal */
+height: calc(100% - 10px); /* Höhe mit etwas Abstand oben und unten */
+width: calc(100% - 40px); /* Breite mit Abstand links und rechts */
+background-color: #6750A2; /* Hintergrundfarbe der Box */
+filter: brightness(1.1); /* Helligkeit anpassen */
+border-radius: 8px; /* Abgerundete Ecken */
+box-shadow: 0 2px 4px rgba(104, 104, 104, 0.2); /* Leichter Schatten */
+z-index: -1; /* Hinter dem Text und Icon */
+transition: var(--transition); /* Sanfte Übergänge */
+padding: 5px; /* Innenabstand der Box */
+
+}
+
+.menu-item.active:before {
+background-color: #6750A2;
+filter: brightness(1.2);
+}
+
+.menu-item svg {
+    margin-right: 12px;
+    width: 20px;
+    height: 20px;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.input-group{
+    gap: 0.2rem !important;;
+}
+.action-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    transition: var(--transition);
+}
+
+.action-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+.action-btn svg {
+    margin-right: 8px;
+}
+
+/* Dashboard Cards */
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.card-title {
+    font-size: 14px;
+    color: var(--text-light);
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.card-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.card-icon.blue {
+    background-color: rgba(92, 106, 196, 0.1);
+    color: var(--primary-color);
+}
+
+.card-icon.green {
+    background-color: rgba(71, 193, 191, 0.1);
+    color: var(--secondary-color);
+}
+
+.card-icon.orange {
+    background-color: rgba(255, 184, 77, 0.1);
+    color: var(--warning-color);
+}
+
+.card-icon.red {
+    background-color: rgba(222, 54, 24, 0.1);
+    color: var(--danger-color);
+}
+
+.card-value {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.card-change {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.card-change.positive {
+    color: var(--success-color);
+}
+
+.card-change.negative {
+    color: var(--danger-color);
+}
+
+/* Table Styles */
+.table-container {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.filter-container {
+    display: flex;
+    gap: 10px;
+}
+
+.search-input {
+    padding: 10px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    outline: none;
+    transition: var(--transition);
+}
+
+.search-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(92, 106, 196, 0.2);
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-btn {
+    padding: 10px 15px;
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 15px 20px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table th {
+    font-weight: 500;
+    color: var(--text-light);
+    background-color: rgba(223, 227, 232, 0.3);
+}
+
+.table tr:hover {
+    background-color: rgba(92, 106, 196, 0.05);
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-pending {
+    background-color: rgba(255, 184, 77, 0.1);
+    color: var(--warning-color);
+}
+
+.status-progress {
+    background-color: rgba(92, 106, 196, 0.1);
+    color: var(--primary-color);
+}
+
+.status-completed {
+    background-color: rgba(80, 184, 60, 0.1);
+    color: var(--success-color);
+}
+
+.status-canceled {
+    background-color: rgba(222, 54, 24, 0.1);
+    color: var(--danger-color);
+}
+
+.action-icon {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: var(--transition);
+}
+
+.action-icon:hover {
+    background-color: rgba(92, 106, 196, 0.1);
+    color: var(--primary-color);
+}
+
+/* Mobile Responsiveness */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 24px;
+    cursor: pointer;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 200;
+}
+
+@media screen and (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .dashboard-cards {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .table-container {
+        overflow-x: auto;
+    }
+
+    .table {
+        min-width: 700px;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.dashboard-cards .card:nth-child(1) { animation-delay: 0.1s; }
+.dashboard-cards .card:nth-child(2) { animation-delay: 0.2s; }
+.dashboard-cards .card:nth-child(3) { animation-delay: 0.3s; }
+.dashboard-cards .card:nth-child(4) { animation-delay: 0.4s; }
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Tooltip */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltip-text {
+    visibility: hidden;
+    width: 120px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 12px;
+}
+
+.tooltip .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+/* Auswahlboxen */
+.selection-box-container {
+display: flex;
+flex-wrap: wrap;
+gap: 20px;
+margin: 30px 0;
+}
+
+.selection-box {
+width: 200px;
+height: 150px;
+background-color: #fff;
+border-radius: 8px;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+padding: 20px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.selection-box:hover {
+transform: translateY(-5px);
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.selection-box svg {
+width: 40px;
+height: 40px;
+margin-bottom: 10px;
+/*fill: #5c6ac4;  Deine Primärfarbe */
+}
+
+.selection-box h3 {
+font-size: 1.2rem;
+margin: 0;
+color: #333;
+}
+
+:root {
+    --sap-primary: #0070f2;
+    --sap-primary-dark: #0054b3;
+    --sap-background: #f7f7f7;
+    --sap-section: #ffffff;
+    --sap-border: #e5e5e5;
+    --sap-text: #32363a;
+    --sap-label: #6a6d70;
+}
+
+body {
+    background-color: var(--sap-background);
+    color: var(--sap-text);
+    font-family: '72', 'Segoe UI', Arial, sans-serif;
+}
+
+.sap-header {
+    background-color: white;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    padding: 0.75rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.sap-title {
+    font-size: 1.25rem;
+    font-weight: normal;
+    color: var(--sap-text);
+    margin: 0;
+}
+
+.sap-card {
+    background-color: var(--sap-section);
+    border-radius: 4px;
+    border: 1px solid var(--sap-border);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.sap-card-title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: var(--sap-text);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sap-form-control {
+    border: 1px solid var(--sap-border);
+    border-radius: 4px;
+    padding: 0.5rem;
+    width: 100%;
+    font-size: 0.875rem;
+}
+
+.sap-label {
+    font-size: 0.75rem;
+    color: var(--sap-label);
+    margin-bottom: 0.25rem;
+    display: block;
+}
+
+.sap-btn {
+    background-color: var(--sap-primary);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.sap-btn:hover {
+    background-color: var(--sap-primary-dark);
+    color: white;
+    text-decoration: none;
+}
+
+.sap-btn-secondary {
+    background-color: white;
+    color: var(--sap-primary);
+    border: 1px solid var(--sap-primary);
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+.sap-btn-secondary:hover {
+    background-color: rgba(0, 112, 242, 0.05);
+    color: var(--sap-primary);
+    text-decoration: none;
+}
+
+.sap-btn-ghost {
+    background-color: transparent;
+    color: var(--sap-primary);
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+.sap-btn-ghost:hover {
+    background-color: rgba(0, 112, 242, 0.05);
+    color: var(--sap-primary);
+    text-decoration: none;
+}
+
+.sap-icon {
+    color: var(--sap-primary);
+    margin-right: 0.25rem;
+}
+
+.sap-tooltip {
+    position: relative;
+    display: inline-block;
+    margin-left: 0.25rem;
+    color: var(--sap-label);
+}
+
+.sap-tooltip .tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: #333;
+    color: white;
+    text-align: left;
+    padding: 5px 10px;
+    border-radius: 4px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.75rem;
+    font-weight: normal;
+}
+
+.sap-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+.required::after {
+    content: "*";
+    color: #d9364f;
+    margin-left: 2px;
+}
+
+.sap-form-group {
+    margin-bottom: 1rem;
+}
+
+.sap-search-container {
+    position: relative;
+}
+
+/* Modal styles */
+.sap-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+.sap-modal-content {
+    background-color: white;
+    border-radius: 4px;
+    width: 80%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+
+.sap-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.sap-modal-title {
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+.sap-modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.sap-section-nav {
+    position: sticky;
+    top: 70px;
+}
+
+.sap-nav-link {
+    display: block;
+    padding: 0.5rem;
+    color: var(--sap-text);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.sap-nav-link:hover, .sap-nav-link.active {
+    background-color: rgba(0, 112, 242, 0.05);
+    border-left: 3px solid var(--sap-primary);
+    color: var(--sap-primary);
+    text-decoration: none;
+}
+
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    color: #d9364f;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--sap-primary);
+    box-shadow: 0 0 0 1px var(--sap-primary);
+}
+
+.sap-footer {
+    background-color: white;
+    border-top: 1px solid var(--sap-border);
+    padding: 1rem;
+    position: sticky;
+    bottom: 0;
+    box-shadow: 0 -1px 4px rgba(0,0,0,0.1);
+}
