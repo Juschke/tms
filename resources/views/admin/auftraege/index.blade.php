@@ -14,99 +14,99 @@
         </a>
     </header>
 
-    <!-- Dashboard-Karten -->
-    <section class="dashboard-cards">
-        <div class="card fade-in">
-            <div class="card-header">
-                <h3 class="card-title">Aktive Aufträge</h3>
-                <div class="card-icon blue">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" 
-                         viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-                    </svg>
-                </div>
-            </div>
-            <div class="card-value">28</div>
-            <div class="card-change positive">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" 
+<!-- Dashboard-Karten -->
+<section class="dashboard-cards">
+    <div class="card fade-in">
+        <div class="card-header">
+            <h3 class="card-title">Aktive Aufträge</h3>
+            <div class="card-icon blue">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" 
                      viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="18 15 12 9 6 15"></polyline>
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
                 </svg>
-                12% mehr als letzte Woche
             </div>
         </div>
+        <div class="card-value">{{ $aktiveAuftraege }}</div>
+        <div class="card-change {{ $aktiveAuftraegeChange >= 0 ? 'positive' : 'negative' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" 
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+            {{ abs($aktiveAuftraegeChange) }}% {{ $aktiveAuftraegeChange >= 0 ? 'mehr' : 'weniger' }} als letzte Woche
+        </div>
+    </div>
 
-        <div class="card fade-in">
-            <div class="card-header">
-                <h3 class="card-title">Fällige Aufträge</h3>
-                <div class="card-icon orange pulse">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" 
-                         viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                        <line x1="12" y1="9" x2="12" y2="13"></line>
-                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                    </svg>
-                </div>
-            </div>
-            <div class="card-value">7</div>
-            <div class="card-change negative">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" 
+    <div class="card fade-in">
+        <div class="card-header">
+            <h3 class="card-title">Fällige Aufträge</h3>
+            <div class="card-icon orange pulse">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" 
                      viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6 9 12 15 18 9"></polyline>
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
-                2 mehr als letzte Woche
             </div>
         </div>
+        <div class="card-value">{{ $faelligeAuftraege }}</div>
+        <div class="card-change {{ $faelligeAuftraegeChange >= 0 ? 'negative' : 'positive' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" 
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+            {{ abs($faelligeAuftraegeChange) }}% {{ $faelligeAuftraegeChange >= 0 ? 'mehr' : 'weniger' }} als letzte Woche
+        </div>
+    </div>
 
-        <div class="card fade-in">
-            <div class="card-header">
-                <h3 class="card-title">Umsatz (Monat)</h3>
-                <div class="card-icon green">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" 
-                         viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <polyline points="12 6 12 12 16 14"></polyline>
-                    </svg>
-                </div>
-            </div>
-            <div class="card-value">12.580€</div>
-            <div class="card-change positive">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" 
+    <div class="card fade-in">
+        <div class="card-header">
+            <h3 class="card-title">Ausstehende Aufträge</h3>
+            <div class="card-icon green">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" 
                      viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="18 15 12 9 6 15"></polyline>
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
-                8% mehr als letzten Monat
             </div>
         </div>
+        <div class="card-value">{{ $ausstehendeAuftraege }}</div>
+        <div class="card-change {{ $ausstehendeAuftraegeChange >= 0 ? 'positive' : 'negative' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" 
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+            {{ abs($ausstehendeAuftraegeChange) }}% {{ $ausstehendeAuftraegeChange >= 0 ? 'mehr' : 'weniger' }} als letzten Monat
+        </div>
+    </div>
 
-        <div class="card fade-in">
-            <div class="card-header">
-                <h3 class="card-title">Fertige Aufträge (Monat)</h3>
-                <div class="card-icon red">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" 
-                         viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
-                    </svg>
-                </div>
-            </div>
-            <div class="card-value">42</div>
-            <div class="card-change positive">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" 
+    <div class="card fade-in">
+        <div class="card-header">
+            <h3 class="card-title">Fertige Aufträge (Monat)</h3>
+            <div class="card-icon red">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" 
                      viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="18 15 12 9 6 15"></polyline>
+                    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
                 </svg>
-                15% mehr als letzten Monat
             </div>
         </div>
-    </section>
+        <div class="card-value">{{ $fertigeAuftraege }}</div>
+        <div class="card-change {{ $fertigeAuftraegeChange >= 0 ? 'positive' : 'negative' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" 
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+            {{ abs($fertigeAuftraegeChange) }}% {{ $fertigeAuftraegeChange >= 0 ? 'mehr' : 'weniger' }} als letzten Monat
+        </div>
+    </div>
+</section>
     <!-- Auswahl-Boxen -->
     <section class="selection-box-container fade-in">
         <div class="selection-box" onclick="location.href='{{ route('admin.auftraege.create') }}'">

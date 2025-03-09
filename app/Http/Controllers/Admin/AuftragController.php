@@ -16,7 +16,7 @@ class AuftragController extends Controller
     public function index(Request $request)
     {
         $query = Auftrag::with('kunde');
-
+    
         // Suchfilter
         if ($request->filled('search')) {
             $search = $request->input('search');
@@ -25,33 +25,85 @@ class AuftragController extends Controller
                       $q->where('name', 'LIKE', "%$search%");
                   });
         }
-
+    
         // Status-Filter
         if ($request->filled('status')) {
             $query->where('status', $request->input('status'));
         }
-
-        // Statistik-Werte berechnen
-        $aktiveAuftraege = Auftrag::where('status', 'in_bearbeitung')->count();
-        $ausstehendeAuftraege = Auftrag::where('status', 'offen')->count();
-        $faelligeAuftraege = Auftrag::where('faellig_am', '<', now())->whereNotIn('status', ['abgeschlossen', 'storniert'])->count();
-        $fertigeAuftraege = Auftrag::where('status', 'abgeschlossen')
-                                    ->whereMonth('updated_at', now()->month)
-                                    ->count();
-
+    
+        // Berechnung der aktuellen Statistiken
+        $aktiveAuftraege = Auftrag::where('status', 'InBearbeitung')->count();
+        $ausstehendeAuftraege = Auftrag::where('status', 'Neu')->count();
+        $faelligeAuftraege = Auftrag::where('faellig_am', '<', now())
+            ->whereNotIn('status', ['abgeschlossen', 'storniert'])
+            ->count();
+        $fertigeAuftraege = Auftrag::where('status', 'Abgeschlossen')
+            ->whereMonth('updated_at', now()->month)
+            ->count();
+    
+        // Berechnung der Statistiken für die letzte Woche/Monat
+        $lastWeekStart = now()->subWeek()->startOfWeek();
+        $lastWeekEnd = now()->subWeek()->endOfWeek();
+        $lastMonthStart = now()->subMonth()->startOfMonth();
+        $lastMonthEnd = now()->subMonth()->endOfMonth();
+    
+        $lastWeekActiveAuftraege = Auftrag::where('status', 'InBearbeitung')
+            ->whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])
+            ->count();
+        
+        $lastWeekDueAuftraege = Auftrag::where('faellig_am', '<', now())
+            ->whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])
+            ->whereNotIn('status', ['abgeschlossen', 'storniert'])
+            ->count();
+        
+        $lastMonthPendingAuftraege = Auftrag::where('status', 'Neu')
+            ->whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])
+            ->count();
+        
+        $lastMonthCompletedAuftraege = Auftrag::where('status', 'Abgeschlossen')
+            ->whereBetween('updated_at', [$lastMonthStart, $lastMonthEnd])
+            ->count();
+    
+        // Prozentuale Änderungen berechnen
+        $aktiveAuftraegeChange = $lastWeekActiveAuftraege > 0 
+            ? round(($aktiveAuftraege - $lastWeekActiveAuftraege) / $lastWeekActiveAuftraege * 100, 1)
+            : 0;
+        
+        $faelligeAuftraegeChange = $lastWeekDueAuftraege > 0 
+            ? round(($faelligeAuftraege - $lastWeekDueAuftraege) / $lastWeekDueAuftraege * 100, 1)
+            : 0;
+        
+        $ausstehendeAuftraegeChange = $lastMonthPendingAuftraege > 0 
+            ? round(($ausstehendeAuftraege - $lastMonthPendingAuftraege) / $lastMonthPendingAuftraege * 100, 1)
+            : 0;
+        
+        $fertigeAuftraegeChange = $lastMonthCompletedAuftraege > 0 
+            ? round(($fertigeAuftraege - $lastMonthCompletedAuftraege) / $lastMonthCompletedAuftraege * 100, 1)
+            : 0;
+    
         $auftraege = $query->orderBy('created_at', 'desc')->paginate(10);
-
-        return view('admin.auftraege.index', compact('auftraege', 'aktiveAuftraege', 'ausstehendeAuftraege', 'faelligeAuftraege', 'fertigeAuftraege'));
+    
+        return view('admin.auftraege.index', compact(
+            'auftraege', 
+            'aktiveAuftraege', 
+            'ausstehendeAuftraege', 
+            'faelligeAuftraege', 
+            'fertigeAuftraege',
+            'aktiveAuftraegeChange',
+            'faelligeAuftraegeChange',
+            'ausstehendeAuftraegeChange',
+            'fertigeAuftraegeChange'
+        ));
     }
 
     public function create()
     {
         $kunden = Kunde::all();
-        $benutzer = User::all();
+        $users = User::all();
         $sprachen = Sprachen::all(); // Alle Sprachen abrufen
         $partner = Partner::all();
         $autoGenNumber = $this->generateAuftragsnummer();
-        return view('admin.auftraege.create', compact('kunden', 'benutzer', 'sprachen','partner','autoGenNumber' ));
+        return view('admin.auftraege.create', compact('kunden', 'users', 'sprachen','partner','autoGenNumber' ));
     }
     
 
@@ -228,5 +280,14 @@ public function downloadInvoice($id)
         return redirect()
             ->route('admin.auftraege.show', $auftrag->id)
             ->with('success', 'Partner wurde erfolgreich zugewiesen.');
-    }
+        }
+        public function quellSprache()
+        {
+            return $this->belongsTo(Sprachen::class, 'quell_sprache', 'id');
+        }
+
+        public function zielSprache()
+        {
+            return $this->belongsTo(Sprachen::class, 'ziel_sprache', 'id');
+        }
 }

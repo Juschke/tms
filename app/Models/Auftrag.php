@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Sprachen;
 
 class Auftrag extends Model
 {
@@ -122,5 +123,14 @@ class Auftrag extends Model
     public function setTitelAttribute($value)
     {
         $this->attributes['titel'] = ucfirst($value);
+    }
+    public function quell_sprache()
+    {
+        return $this->belongsTo(Sprachen::class, 'quell_sprache'); 
+    }
+
+    public function ziel_sprache()
+    {
+        return $this->belongsTo(Sprachen::class, 'ziel_sprache');
     }
 }
